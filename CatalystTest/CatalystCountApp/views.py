@@ -61,23 +61,29 @@ def UploadExcel(request):
 
         imported_data = pandas.read_csv(file)
         data = imported_data.to_dict(orient='records')
-
+        data_to_list = []
         for data1 in data:
-            print(data1)
-            value = Company.objects.create(company_id=data1["id"],
-                                           company_name=data1['name'],
-                                           company_domain=data1['domain'],
-                                           year_founded=data1['year founded'],
-                                           industry=data1['industry'],
-                                           size_range=data1['size range'],
-                                           locality=data1['locality'],
-                                           country=data1['country'],
-                                           linkedin_url=data1['linkedin url'],
-                                           current_employee_estimate=data1['current employee estimate'],
-                                           total_employee_estimate=data1['total employee estimate'],
-                                           )
-        return JsonResponse({'msg': "Done"})
-
+            # print(data1)
+            value = data_to_list.append(Company(company_id=data1["id"],
+                                                company_name=data1['name'],
+                                                company_domain=data1['domain'],
+                                                year_founded=data1['year founded'],
+                                                industry=data1['industry'],
+                                                size_range=data1['size range'],
+                                                locality=data1['locality'],
+                                                country=data1['country'],
+                                                linkedin_url=data1['linkedin url'],
+                                                current_employee_estimate=data1['current employee estimate'],
+                                                total_employee_estimate=data1['total employee estimate'],
+                                                ))
+            if data_to_list:
+                Company.objects.bulk_create(data_to_list)
+                length_of_list = len(data_to_list)
+                length_of_db = Company.objects.all().count()
+                if length_of_list == length_of_db:
+                    return JsonResponse({'msg': "Done"})
+                else:
+                    return JsonResponse({'msg': "Something went to wrong"})
     return render(request, 'upload.html')
 
 

@@ -4,7 +4,7 @@ from django.db import models
 
 
 class Company(models.Model):
-    company_id = models.IntegerField()
+    company_id = models.CharField(max_length=1000, null=True, blank=True)
     company_name = models.CharField(max_length=1000, null=True, blank=True)
     company_domain = models.CharField(max_length=1000, null=True, blank=True)
     year_founded = models.CharField(max_length=100, null=True, blank=True)
